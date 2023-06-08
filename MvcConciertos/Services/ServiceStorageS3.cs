@@ -2,6 +2,7 @@
 {
     using Amazon.S3.Model;
     using Amazon.S3;
+    using MvcConciertos.Models;
 
     public class ServiceStorageS3
     {
@@ -9,9 +10,11 @@
         private string BucketName;
         private IAmazonS3 ClientS3;
 
-        public ServiceStorageS3(IConfiguration configuration, IAmazonS3 ClientS3)
+        public ServiceStorageS3(IConfiguration configuration, IAmazonS3 ClientS3, KeysModel keysModel)
         {
-            this.BucketName = configuration.GetValue<string>("Urls:BucketName");
+            //this.BucketName = configuration.GetValue<string>("Urls:BucketName");
+            this.BucketName = keysModel.BucketName;
+
             this.ClientS3 = ClientS3;
         }
 
