@@ -16,7 +16,8 @@ namespace MvcConciertos.Services
         public ServiceConciertos(IConfiguration configuration, KeysModel keysModel)
         {
             this.header = new MediaTypeWithQualityHeaderValue("application/json");
-            this.UrlApi = keysModel.ApiUrl;
+            //this.UrlApi = keysModel.ApiConciertos;
+            this.UrlApi =  configuration.GetValue<string>("Urls:ApiConciertos");
         }
 
         #region GENERAL

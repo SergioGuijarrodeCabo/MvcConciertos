@@ -1,4 +1,22 @@
+using Amazon.S3;
+using MvcConciertos.Helpers;
+using MvcConciertos.Models;
+using MvcConciertos.Services;
+using Newtonsoft.Json;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// AWS Secrets Manager ============================================ 
+string secret = await SecretsManager.GetSecretAsync();
+KeysModel model = JsonConvert.DeserializeObject<KeysModel>(secret);
+
+builder.Services.AddSingleton<KeysModel>(model);
+
+// Add services to the container.
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddTransient<ServiceStorageS3>();
+builder.Services.AddTransient<ServiceConciertos>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
