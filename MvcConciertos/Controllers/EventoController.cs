@@ -17,11 +17,24 @@ namespace MvcConciertos.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? idcategoria)
         {
-            List<Evento> eventos = await this.service.GetEventosAsync();
+            List<Evento> eventos;
+
+            if (idcategoria.HasValue)
+            {
+                eventos = await this.service.GetEventosporCategoriaAsync(idcategoria.Value);
+            }
+            else
+            {
+                eventos = await this.service.GetEventosAsync();
+            }
+
+            List<CategoriaEvento> categorias = await this.service.GetCategoriaEventosAsync();
+            ViewBag.Categorias = categorias;
+
             foreach (var evento in eventos)
-            { // Sirve para ambos (Public y Private)
+            {
                 try
                 {
                     using (Stream imageStream = await this.serviceS3.GetFileAsync(evento.Imagen))
@@ -40,42 +53,23 @@ namespace MvcConciertos.Controllers
                     evento.Imagen = null;
                 }
             }
+
             return View(eventos);
         }
 
 
-        public async Task<IActionResult> EventosPorCategoria(int idcategoria)
-        {
-            List<Evento> eventos = await this.service.GetEventosporCategoriaAsync(idcategoria);
-            foreach (var evento in eventos)
-            { // Sirve para ambos (Public y Private)
-                try
-                {
-                    using (Stream imageStream = await this.serviceS3.GetFileAsync(evento.Imagen))
-                    {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            await imageStream.CopyToAsync(memoryStream);
-                            byte[] bytes = memoryStream.ToArray();
-                            string base64Image = Convert.ToBase64String(bytes);
-                            evento.Imagen = "data:image;base64," + base64Image;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    evento.Imagen = null;
-                }
-            }
-            return View(eventos);
-        }
+
+
+
+
+
 
 
         public async Task<IActionResult> Categorias()
         {
             List<CategoriaEvento> categorias = await this.service.GetCategoriaEventosAsync();
-           
-            return View(categorias);
+
+            return RedirectToAction("Index");
         }
 
 

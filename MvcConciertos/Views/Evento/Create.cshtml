@@ -1,0 +1,32 @@
+﻿@model Evento
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h1>Create Event</h1>
+
+@using (Html.BeginForm("Create", "EventoController", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="Nombre" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="artista">Artista:</label>
+        <input type="text" id="artista" name="Artista" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="idcategoria">Categoría:</label>
+        <input type="number" id="idcategoria" name="IdCategoria" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="imagen">Imagen:</label>
+        <input type="file" id="imagen" name="file" class="form-control-file" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+}
